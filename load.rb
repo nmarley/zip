@@ -27,15 +27,12 @@ class ZipCode < ActiveRecord::Base
   belongs_to :city
 end
 
-CSV.parse(File.read(fn), headers: true).each do |rec|
-  zip = rec['zip']
 
+# parse CSV file, load records into DB
+CSV.parse(File.read(fn), headers: true).each do |rec|
   state = State.find_or_create_by(abbr: rec['state'])
   city = City.find_or_create_by(state: state, name: rec['city'])
   zip_code = ZipCode.find_or_create_by(city: city, code: rec['zip'])
-
-  #puts "city = [#{city}]"
-  #puts "zip = [#{zip}]"
-  #puts "=" * 72
 end
+
 
